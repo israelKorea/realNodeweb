@@ -1,23 +1,31 @@
 const http = require('http');
+const url = require('url');
+const fs = require('fs');
 
 var server = http.createServer((req, res) => {
-  return req
-    .on('err', (err) => {
-      console.log(err);
-      res.status(500).send('Internal Server Error');
-    })
-    .on('data', (data) => {
-      console.log(data);
-    })
-    .on('end', () => {
-      res.on('error', (err) => {
-        console.error(err);
+  const path = url.parse(req.url, true).pathname;
+
+  if(req.method) === 'GET'){
+    if(path === '/about'){
+      res.writeHead(200, {'Content-Type', 'text/html'});
+      fs.readFile(__dirname + '/about.html',(err, data) => {
+        if(err){
+          return console.error(err);
+        }
+        res.end(data, 'utf-8');
       });
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'text/plain');
-      res.write('Hello World!\n');
-      res.end();
-    })
-});
+    }else if(path === '/'){
+      res.writeHead(200, 'Content-Type', 'text/html');
+      fs.readFile(__dirname + '/main.html', (err, data) => {
+        if(err){
+          return console.error(err);
+        }
+        res.end(data, 'utf-8');
+      });
+    }else{
+      res.statusCode = 404;
+      res.end('no addr');
+    }
+  });
 
 server.listen(3001);
