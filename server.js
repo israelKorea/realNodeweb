@@ -1,32 +1,17 @@
-const http = require('http');
-const url = require('url');
-const fs = require('fs');
+const express = require('express');
+const path = require('path');
+const app = express();
 
-var server = http.createServer((req, res) => {
-  const path = url.parse(req.url, true).pathname;
+app.use(express.static(path.join(__dirname, 'html')));
 
-  if(req.method === 'GET'){
-    if(path === '/about'){
-      res.writeHead(200, {'Content-Type' : 'text/html'});
-      fs.readFile(__dirname + '/about.html',(err, data) => {
-        if(err){
-          return console.error(err);
-        }
-        res.end(data, 'utf-8');
-      });
-    }else if(path === '/'){
-      res.writeHead(200, {'Content-Type' : 'text/html'});
-      fs.readFile(__dirname + '/main.html', (err, data) => { // __dirname : root directory
-        if(err){
-          return console.error(err);
-        }
-        res.end(data, 'utf-8');
-      });
-    }else{
-      res.statusCode = 404;
-      res.end('no addr');
-    }
-  }
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'html', 'main.html'));
+});
+app.get('/about', (req, res) => {
+  res.sendFile(path.join(__dirname, 'html', 'about.html'));
 });
 
-server.listen(3001);
+
+app.listen(3001, () => {
+  console.log('server running on 3001 port!');
+});
