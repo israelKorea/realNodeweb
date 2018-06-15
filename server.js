@@ -1,43 +1,26 @@
+const express = require('express');
+const path = require('path');
+const app = express();
+const route = require('./route.js'); //route.js file
 
-
-
-const http = require('http');
-const url = require('url');
-const fs = require('fs');
-
-var server = http.createServer((req, res) => {
-  /*
-    url.parse 로 요청한 주소 request.url을 분석
-    path 변수에 url 할당
-    GET(기본적인요청)요청일 때 url따라 HMTL파일을 읽어들임
-  */
-  const path = url.parse(req.url, true).pathname;
-
-  if(req.method === 'GET'){
-    if(path === '/about'){
-      res.writeHead(200, {'Content-Type' : 'text/html'});
-      /*
-        __dirname : 현재경로
-      */
-      fs.readFile(__dirname + '/about.html',(err, data) => {
-        if(err){
-          return console.error(err);
-        }
-        res.end(data, 'utf-8');
-      });
-    }else if(path === '/'){
-      res.writeHead(200, {'Content-Type' : 'text/html'});
-      fs.readFile(__dirname + '/main.html', (err, data) => { // __dirname : root directory
-        if(err){
-          return console.error(err);
-        }
-        res.end(data, 'utf-8');
-      });
-    }else{
-      res.statusCode = 404;
-      res.end('no addr');
-    }
-  }
+app.set('view engine', 'pug'); // 엔진을 pug로 설정
+app.set('views', path.join(__dirname, 'html')); // pug파일들 폴더를 정함
+app.use(express.static(path.join(__dirname, 'html')));
+app.use('/', route);
+app.use((req, res, next) => { // 404 error
+  res.status(404).send('no addr');
+});
+app.use((err, req, res, next) => {
+  console.error(err.stack); // show error msg
+  res.status(500).send('server error'); // send msg to client about server error with 500 err
 });
 
-server.listen(3001);
+/* middleware example
+  This middleware running when req to server
+ */
+app.use((req, res, next)=>{
+  console.log('Hello world!! to be great programmer');
+});
+app.listen(3000, ()=>{
+  console.log('Exress server run on 3000 port!');
+});
