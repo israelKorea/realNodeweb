@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+const DBconnect = require('./database.js'); // calling DB connection
 const route = require('./route.js'); //route.js file
 
 app.set('view engine', 'pug'); // 엔진을 pug로 설정

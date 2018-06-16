@@ -46,3 +46,9 @@ app.use(express.static(path.join(__dirname, 'html')));
        1. app.use('/category', route1); 일 때, route1에 있는 라우터들은 모두 카테고리 주소 아래에 그룹화 됨.
 
        2. route1 파일에 router.get('/javascript', callback)코드 있을 경우, 자동으로 /category/javascript 주소로 연결된다
+
+
+$Nodejs & mongoose 커넥션 참고(https://www.zerocho.com/category/NodeJS/post/57924d1e8241b6f43951af1a)
+      # mongoose : MongoDB의 스키마가 있는 개념(mysql의 테이블과 비슷)
+      # mongoDB (mongoose) : 설치하면 기본으로 bind-address : 127.0.0.1 로 설정되어 있어서 mongod.conf파일에서 외부접근을 허용해야 함
+      
